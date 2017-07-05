@@ -23,7 +23,7 @@ public class Record implements Serializable {
 
 	@Id
 	@Column(name = "RecordId", nullable = false)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@ManyToOne

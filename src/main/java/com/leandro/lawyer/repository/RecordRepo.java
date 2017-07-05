@@ -9,9 +9,9 @@ import com.leandro.lawyer.model.Record;
 @Repository
 public interface RecordRepo extends CrudRepository<Record, Long> {
 
-	@Query("SELECT * FROM Records r WHERE r.OwnerId = ?1")
+	@Query("SELECT r FROM Record r WHERE r.owner.id = ?1")
 	Iterable<Record> findByOwner(Long id);
 
-	@Query("SELECT * FROM Records r WHERE r.OwnerId = ?1 AND r.RecordType = ?2")
+	@Query("SELECT r FROM Record r WHERE  r.owner.id = ?1 AND  r.recordType = ?2")
 	Iterable<Record> findByOwnerAndType(Long ownerId, Integer recordType);
 }
