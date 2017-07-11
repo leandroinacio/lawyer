@@ -48,14 +48,14 @@ public class Owner implements UserDetails {
 	private Boolean isActive;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List roles;
+	@OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity=Role.class)
+	private List<Role> roles;
 
 	public Owner() {
 		super();
 	}
 
-	public Owner(Long id, String login, String password, String name, String title, Boolean isActive, List roles) {
+	public Owner(Long id, String login, String password, String name, String title, Boolean isActive, List<Role> roles) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -141,11 +141,11 @@ public class Owner implements UserDetails {
 		this.isActive = isActive;
 	}
 
-	public List getRoles() {
+	public List<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List roles) {
+	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
 

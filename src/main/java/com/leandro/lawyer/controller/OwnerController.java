@@ -1,9 +1,11 @@
 package com.leandro.lawyer.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.leandro.lawyer.model.Owner;
 import com.leandro.lawyer.repository.OwnerRepo;
@@ -11,7 +13,8 @@ import com.leandro.lawyer.repository.OwnerRepo;
 /**
  * @author Leandro Souza
  */
-@Controller
+@CrossOrigin(origins = "http://localhost:8080")
+@RestController
 public class OwnerController {
 
 	@Autowired
@@ -23,20 +26,19 @@ public class OwnerController {
 	}
 
 	@PostMapping("/owner/fetchById")
-	public @ResponseBody Owner fetchById(Long id) {
+	public @ResponseBody Owner fetchById(@RequestBody Long id) {
 		return ownerRepo.findOne(id);
 	}
-
+	
 	@PostMapping("/owner/insert")
-	public @ResponseBody Owner insert(Owner owner) {
+	public @ResponseBody Owner insert(@RequestBody Owner owner) {
 		return ownerRepo.save(owner);
 	}
 
 	@PostMapping("/owner/update")
-	public @ResponseBody Boolean update(Long oldOwnerId, Owner owner) {
-		Owner oldOne = ownerRepo.findOne(oldOwnerId);
-		if (oldOne == null) {
-			owner.setId(oldOwnerId);
+	public @ResponseBody Boolean update(@RequestBody Owner owner) {
+		Owner oldOne = ownerRepo.findOne(owner.getId());
+		if (oldOne != null) {
 			ownerRepo.save(owner);
 			return true;
 		}
@@ -44,7 +46,7 @@ public class OwnerController {
 	}
 
 	@PostMapping("/owner/delete")
-	public @ResponseBody Boolean delete(Long id) {
+	public @ResponseBody Boolean delete(@RequestBody Long id) {
 		ownerRepo.delete(id);
 		return true;
 	}

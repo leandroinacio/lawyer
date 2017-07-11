@@ -1,6 +1,7 @@
 package com.leandro.lawyer.services;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,15 +25,14 @@ public class AuthProviderService implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String login = auth.getName();
-		String senha = auth.getCredentials().toString();
+		String password = auth.getCredentials().toString();
 
-		Owner owner = new Owner();
-		// Defina suas regras para realizar a autenticação
-
+		Owner owner = ownerRepo.authenticate(login, password);
+		
 		if (owner != null) {
 			if (owner.getIsActive()) {
 				Collection<? extends GrantedAuthority> authorities = owner.getRoles();
-				return new UsernamePasswordAuthenticationToken(login, senha, authorities);
+				return new UsernamePasswordAuthenticationToken(login, password, authorities);
 			} else {
 				throw new BadCredentialsException("Este usuário está desativado.");
 			}
