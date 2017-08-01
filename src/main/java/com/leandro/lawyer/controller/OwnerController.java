@@ -37,7 +37,7 @@ public class OwnerController {
 
 	@PostMapping("/owner/update")
 	public @ResponseBody Boolean update(@RequestBody Owner owner) {
-		Owner oldOne = ownerRepo.findOne(owner.getId());
+		Owner oldOne = ownerRepo.findByLogin(owner.getLogin());
 		if (oldOne != null) {
 			ownerRepo.save(owner);
 			return true;

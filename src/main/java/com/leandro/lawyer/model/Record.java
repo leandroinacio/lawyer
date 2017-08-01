@@ -26,9 +26,8 @@ public class Record implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "OwnerId", referencedColumnName = "OwnerId")
-	private Owner owner;
+	@Column(name = "OwnerId", nullable = false)
+	private String owner;
 
 	@Column(name = "RecordTitle")
 	private String recordTitle;
@@ -49,7 +48,7 @@ public class Record implements Serializable {
 		super();
 	}
 
-	public Record(Long id, Owner owner, String recordTitle, String recordDescription, Integer recordType,
+	public Record(Long id, String owner, String recordTitle, String recordDescription, Integer recordType,
 			Date dtCreated, Date dtUpdated) {
 		super();
 		this.id = id;
@@ -69,11 +68,11 @@ public class Record implements Serializable {
 		this.id = id;
 	}
 
-	public Owner getOwner() {
+	public String getOwner() {
 		return owner;
 	}
 
-	public void setOwner(Owner owner) {
+	public void setOwner(String owner) {
 		this.owner = owner;
 	}
 

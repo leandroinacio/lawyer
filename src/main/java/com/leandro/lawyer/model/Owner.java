@@ -1,43 +1,31 @@
 package com.leandro.lawyer.model;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "Owners")
-public class Owner implements UserDetails {
+public class Owner {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "OwnerId", nullable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@NotEmpty
-	@Column(name = "Login")
+	@Column(name = "Login", length = 50, unique = true)
+	@Size(min = 4, max = 50)
 	private String login;
 
-	@NotEmpty
-	@Column(name = "Password")
-	private String password;
-
+	@Column(name = "Password", length = 100)
+    @NotNull
+    @Size(min = 4, max = 100)
+    private String password;
+	
 	@Column(name = "Name")
 	private String name;
 
@@ -46,67 +34,24 @@ public class Owner implements UserDetails {
 
 	@Column(name = "IsActive")
 	private Boolean isActive;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity=Role.class)
-	private List<Role> roles;
-
+	
+	@Column(name = "Role")
+	@NotNull
+	private String role;
+	
 	public Owner() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public Owner(Long id, String login, String password, String name, String title, Boolean isActive, List<Role> roles) {
+	public Owner(String login, String password, String name, String title, Boolean isActive, String role) {
 		super();
-		this.id = id;
 		this.login = login;
 		this.password = password;
 		this.name = name;
 		this.title = title;
 		this.isActive = isActive;
-		this.roles = roles;
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles;
-	}
-
-	@Override
-	public String getPassword() {
-		return this.password;
-	}
-
-	@Override
-	public String getUsername() {
-		return this.login;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return false;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return this.isActive;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+		this.role = role;
 	}
 
 	public String getLogin() {
@@ -115,6 +60,14 @@ public class Owner implements UserDetails {
 
 	public void setLogin(String login) {
 		this.login = login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getName() {
@@ -141,25 +94,17 @@ public class Owner implements UserDetails {
 		this.isActive = isActive;
 	}
 
-	public List<Role> getRoles() {
-		return roles;
+	public String getRole() {
+		return role;
 	}
 
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	@Override
 	public String toString() {
-		return "Owner [id=" + id + ", login=" + login + ", password=" + password + ", name=" + name + ", title=" + title
-				+ ", isActive=" + isActive + ", roles=" + roles + "]";
+		return "Owner [login=" + login + ", password=" + password + ", name=" + name + ", title=" + title
+				+ ", isActive=" + isActive + ", role=" + role + "]";
 	}
 }

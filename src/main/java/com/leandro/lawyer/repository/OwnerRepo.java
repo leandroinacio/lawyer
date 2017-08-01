@@ -11,5 +11,8 @@ public interface OwnerRepo extends CrudRepository<Owner, Long> {
 
 	@Query("SELECT o FROM Owner o WHERE o.login = ?1 AND o.password = ?2")
 	Owner authenticate(String login, String password);
+	
+	@Query("SELECT o FROM Owner o WHERE o.login = ?1")
+	Owner findByLogin(String login);
 
 }
