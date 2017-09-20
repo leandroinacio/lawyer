@@ -9,16 +9,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
-
+	
 		public JwtLoginFilter(String url, AuthenticationManager authManager) {
 			super(new AntPathRequestMatcher(url));
 			setAuthenticationManager(authManager);
@@ -30,6 +33,10 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 			
 			AccountCredentials credentials = new ObjectMapper()
 					.readValue(request.getInputStream(), AccountCredentials.class);
+	
+			if (StringUtils.isEmpty(credentials.getPassword()) || StringUtils.isEmpty(credentials.getPassword())) {
+	            throw new AuthenticationServiceException("Username or Password not provided");
+	        }
 			
 			return getAuthenticationManager().authenticate(
 					new UsernamePasswordAuthenticationToken(
@@ -47,7 +54,15 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 				FilterChain filterChain,
 				Authentication auth) throws IOException, ServletException {
 			
-			TokenAuthenticationService.addAuthentication(response, auth.getName());
+			TokenAuthenticationService.addAuthentication(response, auth.getName(), true);
+		}
+
+		
+		@Override
+		protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+	            AuthenticationException failed) throws IOException, ServletException {
+	        SecurityContextHolder.clearContext();
+			TokenAuthenticationService.addAuthentication(response, "", false);
 		}
 
 }

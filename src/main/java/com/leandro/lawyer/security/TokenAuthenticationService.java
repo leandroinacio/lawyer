@@ -19,14 +19,16 @@ public class TokenAuthenticationService {
 		static final String SECRET = "asdf#2!";
 		static final String HEADER_STRING = "Authorization";
 		
-		static void addAuthentication(HttpServletResponse response, String username) {
-			String JWT = Jwts.builder()
-					.setSubject(username)
-					.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-					.signWith(SignatureAlgorithm.HS512, SECRET)
-					.compact();
-			
-			response.addHeader(HEADER_STRING, JWT);
+		static void addAuthentication(HttpServletResponse response, String username, Boolean isSuccess) {
+			if (isSuccess) {
+				String JWT = Jwts.builder()
+						.setSubject(username)
+						.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+						.signWith(SignatureAlgorithm.HS512, SECRET)
+						.compact();
+				
+				response.addHeader(HEADER_STRING, JWT);
+			}
 		}
 		
 		static Authentication getAuthentication(HttpServletRequest request) {

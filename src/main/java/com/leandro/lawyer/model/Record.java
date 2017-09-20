@@ -28,20 +28,10 @@ public class Record implements Serializable {
 
 	@Column(name = "OwnerId", nullable = false)
 	private String owner;
-
-	@Column(name = "RecordTitle")
 	private String recordTitle;
-
-	@Column(name = "RecordDescription")
 	private String recordDescription;
-
-	@Column(name = "RecordType")
 	private Integer recordType;
-
-	@Column(name = "DtCreated")
 	private Date dtCreated;
-
-	@Column(name = "DtUpdated")
 	private Date dtUpdated;
 
 	public Record() {
