@@ -1,4 +1,4 @@
-package com.leandro.lawyer.model;
+/**package com.leandro.lawyer.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,9 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * @author Leandro Inácio
- */
 @Entity
 @Table(name = "Records")
 public class Record implements Serializable {
@@ -113,3 +110,4 @@ public class Record implements Serializable {
 				+ dtUpdated + "]";
 	}
 }
+**/

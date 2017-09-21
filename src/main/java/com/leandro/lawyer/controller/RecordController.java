@@ -1,6 +1,6 @@
 package com.leandro.lawyer.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+/**import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.leandro.lawyer.model.Record;
 import com.leandro.lawyer.repository.RecordRepo;
 
-/**
- * @author Leandro Souza
- */
 @Controller
 public class RecordController {
 
@@ -54,3 +51,4 @@ public class RecordController {
 	}
 
 }
+**/

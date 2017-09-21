@@ -11,21 +11,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandro.lawyer.model.Profile;
-import com.leandro.lawyer.repository.OwnerRepo;
+import com.leandro.lawyer.model.User;
+import com.leandro.lawyer.repository.UserRepo;
 
 /**
  * @author Leandro Souza
  */
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/owner")
-public class ProfileController {
+@RequestMapping("/user")
+public class UserController {
 
-	@Autowired
-	private OwnerRepo ownerRepo;
+	//@Autowired
+	//private ProfileRepo ownerRepo;
 
-	@PostMapping("/owner/fetchAll")
+	/**@PostMapping("/owner/fetchAll")
 	public @ResponseBody Iterable<Profile> fetchAll() {
 		return ownerRepo.findAll();
 	}
@@ -50,7 +50,7 @@ public class ProfileController {
 
 	@PostMapping("/owner/update")
 	public @ResponseBody Boolean update(@RequestBody Profile owner) {
-		Profile oldOne = ownerRepo.findByLogin(owner.getLogin());
+		//Profile oldOne = ownerRepo.findByLogin(owner.getUserName());
 		if (oldOne != null) {
 			ownerRepo.save(owner);
 			return true;
@@ -62,5 +62,5 @@ public class ProfileController {
 	public @ResponseBody Boolean delete(@RequestBody Long id) {
 		ownerRepo.delete(id);
 		return true;
-	}
+	}**/
 }
