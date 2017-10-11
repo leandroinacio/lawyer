@@ -1,32 +1,37 @@
 package com.leandro.lawyer.security;
 
-
-import org.springframework.data.annotation.Id;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.annotation.Id;
 
 public class Authority {
 
-    @Id
-    private Long id;
+	@Id
+	private Long id;
 
-    @NotNull
-    private AuthorityName name;
+	@NotNull
+	private AuthorityName name;
 
-    public Long getId() {
-        return id;
-    }
+	public Authority(Long id, AuthorityName name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public AuthorityName getName() {
-        return name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setName(AuthorityName name) {
-        this.name = name;
-    }
+	public AuthorityName getName() {
+		return name;
+	}
+
+	public void setName(AuthorityName name) {
+		this.name = name;
+	}
 
 }
