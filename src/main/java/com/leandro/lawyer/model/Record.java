@@ -2,6 +2,7 @@ package com.leandro.lawyer.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -20,7 +21,9 @@ public class Record implements Serializable {
 	private String user;
 	private String recordTitle;
 	private String recordDescription;
-	private Integer recordType;
+
+	private List<RecordType> recordType;
+
 	private Date dtCreated;
 	private Date dtUpdated;
 
@@ -28,7 +31,7 @@ public class Record implements Serializable {
 		super();
 	}
 
-	public Record(Long id, String user, String recordTitle, String recordDescription, Integer recordType,
+	public Record(Long id, String user, String recordTitle, String recordDescription, List<RecordType> recordType,
 			Date dtCreated, Date dtUpdated) {
 		super();
 		this.id = id;
@@ -72,11 +75,11 @@ public class Record implements Serializable {
 		this.recordDescription = recordDescription;
 	}
 
-	public Integer getRecordType() {
+	public List<RecordType> getRecordType() {
 		return recordType;
 	}
 
-	public void setRecordType(Integer recordType) {
+	public void setRecordType(List<RecordType> recordType) {
 		this.recordType = recordType;
 	}
 
@@ -101,5 +104,5 @@ public class Record implements Serializable {
 		return "Record [id=" + id + ", user=" + user + ", recordTitle=" + recordTitle + ", recordDescription="
 				+ recordDescription + ", recordType=" + recordType + ", dtCreated=" + dtCreated + ", dtUpdated="
 				+ dtUpdated + "]";
-	}	
+	}
 }
