@@ -1,30 +1,23 @@
-/**package com.leandro.lawyer.model;
+package com.leandro.lawyer.model;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "Records")
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "record")
 public class Record implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "RecordId", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "OwnerId", nullable = false)
-	private String owner;
+	@NotNull
+	private String user;
 	private String recordTitle;
 	private String recordDescription;
 	private Integer recordType;
@@ -35,11 +28,11 @@ public class Record implements Serializable {
 		super();
 	}
 
-	public Record(Long id, String owner, String recordTitle, String recordDescription, Integer recordType,
+	public Record(Long id, String user, String recordTitle, String recordDescription, Integer recordType,
 			Date dtCreated, Date dtUpdated) {
 		super();
 		this.id = id;
-		this.owner = owner;
+		this.user = user;
 		this.recordTitle = recordTitle;
 		this.recordDescription = recordDescription;
 		this.recordType = recordType;
@@ -55,12 +48,12 @@ public class Record implements Serializable {
 		this.id = id;
 	}
 
-	public String getOwner() {
-		return owner;
+	public String getUser() {
+		return user;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public String getRecordTitle() {
@@ -105,9 +98,8 @@ public class Record implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Record [id=" + id + ", owner=" + owner + ", recordTitle=" + recordTitle + ", recordDescription="
+		return "Record [id=" + id + ", user=" + user + ", recordTitle=" + recordTitle + ", recordDescription="
 				+ recordDescription + ", recordType=" + recordType + ", dtCreated=" + dtCreated + ", dtUpdated="
 				+ dtUpdated + "]";
-	}
+	}	
 }
-**/

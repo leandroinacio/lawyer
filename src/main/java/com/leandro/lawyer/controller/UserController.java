@@ -22,21 +22,21 @@ import com.leandro.lawyer.repository.UserRepo;
 @RequestMapping("/user")
 public class UserController {
 
-	//@Autowired
-	//private ProfileRepo ownerRepo;
+	@Autowired
+	private UserRepo ownerRepo;
 
-	/**@PostMapping("/owner/fetchAll")
-	public @ResponseBody Iterable<Profile> fetchAll() {
+	@PostMapping("/owner/fetchAll")
+	public @ResponseBody Iterable<User> fetchAll() {
 		return ownerRepo.findAll();
 	}
 
 	@PostMapping("/owner/fetchById")
-	public @ResponseBody Profile fetchById(@RequestBody Long id) {
+	public @ResponseBody User fetchById(@RequestBody Long id) {
 		return ownerRepo.findOne(id);
 	}
 	
 	@PostMapping("/owner/insert")
-	public @ResponseBody Profile insert(@RequestBody Profile owner) {
+	public @ResponseBody User insert(@RequestBody User owner) {
 		
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -49,8 +49,8 @@ public class UserController {
 	}
 
 	@PostMapping("/owner/update")
-	public @ResponseBody Boolean update(@RequestBody Profile owner) {
-		//Profile oldOne = ownerRepo.findByLogin(owner.getUserName());
+	public @ResponseBody Boolean update(@RequestBody User owner) {
+		User oldOne = ownerRepo.findByLogin(owner.getUserName());
 		if (oldOne != null) {
 			ownerRepo.save(owner);
 			return true;
@@ -62,5 +62,5 @@ public class UserController {
 	public @ResponseBody Boolean delete(@RequestBody Long id) {
 		ownerRepo.delete(id);
 		return true;
-	}**/
+	}
 }
