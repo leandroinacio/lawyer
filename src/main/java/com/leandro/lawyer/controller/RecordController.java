@@ -1,54 +1,63 @@
 package com.leandro.lawyer.controller;
 
-/**import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.leandro.lawyer.model.Record;
 import com.leandro.lawyer.repository.RecordRepo;
 
-@Controller
+@CrossOrigin(origins = "http://localhost:8080")
+@RestController
+@RequestMapping("/record")
 public class RecordController {
 
 	@Autowired
 	private RecordRepo recordRepo;
 
-	@PostMapping("/record/fetchAll")
+	@PostMapping("/fetchAll")
+	@PreAuthorize("hasRole('ADMIN')")
 	public @ResponseBody Iterable<Record> fetchAll() {
 		return recordRepo.findAll();
 	}
 
-	@PostMapping("/record/fetchByOwner")
-	public @ResponseBody Iterable<Record> fetchByOwner(Long ownerId) {
-		return recordRepo.findByOwner(ownerId);
-	}
+	/**
+	 * @PostMapping("/fetchByUser") public @ResponseBody Iterable<Record>
+	 * fetchByOwner(Long userid) { return recordRepo.findOne(userid); }
+	 **/
 
-	@PostMapping("/record/fetchByOwnerAndType")
-	public @ResponseBody Iterable<Record> fetchByOwner(Long ownerId, Integer recordType) {
-		return recordRepo.findByOwnerAndType(ownerId, recordType);
-	}
+	/**
+	 * @PostMapping("/fetchByOwnerAndType") public @ResponseBody
+	 * Iterable<Record> fetchByOwner(Long ownerId, Integer recordType) { return
+	 * recordRepo.findByOwnerAndType(ownerId, recordType); }
+	 **/
 
-	@PostMapping("/record/insert")
+	@PostMapping("/insert")
+	@PreAuthorize("hasRole('ADMIN')")
 	public @ResponseBody Record insert(Record record) {
 		return recordRepo.save(record);
 	}
 
-	@PostMapping("/record/update")
-	public @ResponseBody Boolean update(Record record) {
+	@PostMapping("/update")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> update(Record record) {
 		Record oldOne = recordRepo.findOne(record.getId());
 		if (oldOne != null) {
 			recordRepo.save(record);
-			return true;
+			return ResponseEntity.ok().build();
 		}
-		return false;
+		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping("/record/delete")
-	public @ResponseBody Boolean delete(Long id) {
+	public ResponseEntity<?> delete(Long id) {
 		recordRepo.delete(id);
-		return true;
+		return ResponseEntity.ok().build();
 	}
 
 }
-**/

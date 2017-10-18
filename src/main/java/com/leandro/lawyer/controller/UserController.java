@@ -1,9 +1,13 @@
 package com.leandro.lawyer.controller;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leandro.lawyer.model.User;
 import com.leandro.lawyer.repository.UserRepo;
+import com.leandro.lawyer.security.Authority;
+import com.leandro.lawyer.security.AuthorityName;
 
 /**
  * @author Leandro Souza
@@ -23,44 +29,51 @@ import com.leandro.lawyer.repository.UserRepo;
 public class UserController {
 
 	@Autowired
-	private UserRepo ownerRepo;
+	private UserRepo userRepo;
 
-	@PostMapping("/owner/fetchAll")
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@PostMapping("/fetchAll")
+	@PreAuthorize("hasRole('ADMIN')")
 	public @ResponseBody Iterable<User> fetchAll() {
-		return ownerRepo.findAll();
+		return userRepo.findAll();
 	}
 
-	@PostMapping("/owner/fetchById")
-	public @ResponseBody User fetchById(@RequestBody Long id) {
-		return ownerRepo.findOne(id);
-	}
-	
-	@PostMapping("/owner/insert")
-	public @ResponseBody User insert(@RequestBody User owner) {
-		
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return ownerRepo.save(owner);
+	@PostMapping("/fetchById")
+	@PreAuthorize("hasRole('ADMIN')")
+	public @ResponseBody User fetchById(@RequestBody String username) {
+		return userRepo.findByUsername(username);
 	}
 
-	@PostMapping("/owner/update")
-	public @ResponseBody Boolean update(@RequestBody User owner) {
-		User oldOne = ownerRepo.findByLogin(owner.getUserName());
-		if (oldOne != null) {
-			ownerRepo.save(owner);
-			return true;
+	@PostMapping("/insert")
+	@PreAuthorize("hasRole('ADMIN')")
+	public @ResponseBody User insert(@RequestBody User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		List<Authority> auth = new ArrayList<>();
+		Authority aut = new Authority(null, AuthorityName.ROLE_USER);
+		auth.add(aut);
+		user.setAuthorities(auth);
+		user.setLastPasswordResetDate(new Date());
+		return userRepo.save(user);
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/update")
+	public ResponseEntity<?> update(@RequestBody User updates) {
+		User user = userRepo.findByUsername(updates.getUsername());
+		if (user != null) {
+			updates.setPassword(passwordEncoder.encode(updates.getPassword()));
+			updates.setId(user.getId());
+			return ResponseEntity.ok().build();
 		}
-		return false;
+		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping("/owner/delete")
-	public @ResponseBody Boolean delete(@RequestBody Long id) {
-		ownerRepo.delete(id);
-		return true;
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> delete(@RequestBody Long id) {
+		userRepo.delete(id);
+		return ResponseEntity.ok().build();
 	}
 }
