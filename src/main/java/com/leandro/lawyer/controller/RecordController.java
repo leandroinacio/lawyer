@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.leandro.lawyer.model.Record;
 import com.leandro.lawyer.repository.RecordRepo;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/record")
 public class RecordController {

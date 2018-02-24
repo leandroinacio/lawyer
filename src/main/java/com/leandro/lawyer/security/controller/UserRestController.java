@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import com.leandro.lawyer.security.JwtUser;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 public class UserRestController {
 
     @Value("${jwt.header}")

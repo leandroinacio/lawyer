@@ -23,7 +23,7 @@ import com.leandro.lawyer.security.AuthorityName;
 /**
  * @author Leandro Souza
  */
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -47,7 +47,7 @@ public class UserController {
 	}
 
 	@PostMapping("/insert")
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public @ResponseBody User insert(@RequestBody User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		List<Authority> auth = new ArrayList<>();

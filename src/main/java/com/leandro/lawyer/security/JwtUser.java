@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.leandro.lawyer.validators.ValidEmail;
 
 public class JwtUser implements UserDetails {
 
@@ -15,6 +16,8 @@ public class JwtUser implements UserDetails {
     private final String firstname;
     private final String lastname;
     private final String password;
+    
+    @ValidEmail
     private final String email;
     private final Collection<? extends GrantedAuthority> authorities;
     private final boolean enabled;
