@@ -30,7 +30,7 @@ public class User {
 
 	@NotNull
 	private String email;
-
+	
 	@NotNull
 	private Boolean enabled;
 	private Date lastPasswordResetDate;
@@ -39,7 +39,7 @@ public class User {
 
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.enabled = false;
 	}
 
 	public User(String username, String password, String firstname, String lastname, String email, Boolean enabled) {
@@ -138,4 +138,11 @@ public class User {
 		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstname=" + firstname
+				+ ", lastname=" + lastname + ", email=" + email + ", enabled=" + enabled + ", lastPasswordResetDate="
+				+ lastPasswordResetDate + ", authorities=" + authorities + "]";
+	}
+	
 }
