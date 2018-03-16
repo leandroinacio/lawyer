@@ -1,11 +1,14 @@
 package com.leandro.lawyer.controller;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +32,7 @@ import com.leandro.lawyer.security.AuthorityName;
  */
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user/")
 public class UserController {
 
 	@Autowired
@@ -43,7 +46,7 @@ public class UserController {
 
 	@PostMapping("/fetchAll")
 	@PreAuthorize("hasRole('ADMIN')")
-	public @ResponseBody Iterable<User> fetchAll() {
+	public @ResponseBody List<User> fetchAll() {
 		return userRepo.findAll();
 	}
 
@@ -91,4 +94,13 @@ public class UserController {
 		userRepo.delete(id);
 		return ResponseEntity.ok().build();
 	}
+	
+//	@PostMapping("findOne")
+//	public @ResponseBody HttpStatus findOneWithCriteria() {
+//		Query query = Query.query(Criteria.where("name").is("Jack")), User.class);
+//		User user = userRepo.findOne(query);
+//		
+//		return HttpStatus.OK;
+//		
+//	}
 }

@@ -6,14 +6,21 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.leandro.lawyer.security.Authority;
 
 @Document(collection = "profile")
+//@CompoundIndexes({ @CompoundIndex(name = "email_age", def = "{'email.id' : 1, 'age': 1}") })
 public class User {
 
 	@Id
+	@Indexed(direction = IndexDirection.ASCENDING)
 	private String id;
 
 	@NotNull
@@ -42,6 +49,7 @@ public class User {
 		this.enabled = false;
 	}
 
+	@PersistenceConstructor
 	public User(String username, String password, String firstname, String lastname, String email, Boolean enabled) {
 		super();
 		this.username = username;

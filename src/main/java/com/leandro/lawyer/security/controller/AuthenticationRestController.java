@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandro.lawyer.model.CurrentUser;
+import com.leandro.lawyer.model.User;
+import com.leandro.lawyer.repository.UserRepo;
 import com.leandro.lawyer.security.JwtAuthenticationRequest;
 import com.leandro.lawyer.security.JwtAuthenticationResponse;
 import com.leandro.lawyer.security.JwtTokenUtil;
@@ -41,9 +44,11 @@ public class AuthenticationRestController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private UserRepo userRepo;
+
 	@PostMapping("/auth")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
-    //public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
 
         // Perform the security
         final Authentication authentication = authenticationManager.authenticate(
@@ -57,11 +62,11 @@ public class AuthenticationRestController {
         // Reload password post-security so we can generate token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
-        //        final String token = jwtTokenUtil.generateToken(userDetails, device);
         final String token = jwtTokenUtil.generateToken(userDetails);
+        final User user = userRepo.findByUsername(authenticationRequest.getUsername());
 
         // Return the token
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        return ResponseEntity.ok(new CurrentUser(token, user));
     }
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)

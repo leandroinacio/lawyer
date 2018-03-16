@@ -11,7 +11,11 @@ import com.leandro.lawyer.validators.ValidEmail;
 
 public class JwtUser implements UserDetails {
 
-    private final String id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final String id;
     private final String username;
     private final String firstname;
     private final String lastname;
