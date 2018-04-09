@@ -7,6 +7,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "record")
@@ -15,15 +17,20 @@ public class Record implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private Long id;
-
+	@Indexed(direction = IndexDirection.ASCENDING)
+	private String id;
+	
 	@NotNull
-	private String user;
+	private String userId;
+	
+	@NotNull
 	private String recordTitle;
+	
+	@NotNull
 	private String recordDescription;
 
 	@NotNull
-	private List<RecordType> recordType;
+	private List<String> tag;
 
 	private Date dtCreated;
 	private Date dtUpdated;
@@ -32,32 +39,32 @@ public class Record implements Serializable {
 		super();
 	}
 
-	public Record(Long id, String user, String recordTitle, String recordDescription, List<RecordType> recordType,
+	public Record(String id, String userId, String recordTitle, String recordDescription, List<String> tag,
 			Date dtCreated, Date dtUpdated) {
 		super();
 		this.id = id;
-		this.user = user;
+		this.userId = userId;
 		this.recordTitle = recordTitle;
 		this.recordDescription = recordDescription;
-		this.recordType = recordType;
+		this.tag = tag;
 		this.dtCreated = dtCreated;
 		this.dtUpdated = dtUpdated;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getRecordTitle() {
@@ -76,12 +83,12 @@ public class Record implements Serializable {
 		this.recordDescription = recordDescription;
 	}
 
-	public List<RecordType> getRecordType() {
-		return recordType;
+	public List<String> getTag() {
+		return tag;
 	}
 
-	public void setRecordType(List<RecordType> recordType) {
-		this.recordType = recordType;
+	public void setTag(List<String> tag) {
+		this.tag = tag;
 	}
 
 	public Date getDtCreated() {
@@ -102,8 +109,7 @@ public class Record implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Record [id=" + id + ", user=" + user + ", recordTitle=" + recordTitle + ", recordDescription="
-				+ recordDescription + ", recordType=" + recordType + ", dtCreated=" + dtCreated + ", dtUpdated="
-				+ dtUpdated + "]";
+		return "Record [id=" + id + ", userId=" + userId + ", recordTitle=" + recordTitle + ", recordDescription="
+				+ recordDescription + ", tag=" + tag + ", dtCreated=" + dtCreated + ", dtUpdated=" + dtUpdated + "]";
 	}
 }

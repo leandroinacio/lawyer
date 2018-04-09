@@ -64,7 +64,8 @@ public class AuthenticationRestController {
 
         final String token = jwtTokenUtil.generateToken(userDetails);
         final User user = userRepo.findByUsername(authenticationRequest.getUsername());
-
+        user.setPassword(null);
+        
         // Return the token
         return ResponseEntity.ok(new CurrentUser(token, user));
     }

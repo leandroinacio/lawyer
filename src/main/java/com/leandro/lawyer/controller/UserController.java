@@ -1,14 +1,11 @@
 package com.leandro.lawyer.controller;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import com.leandro.lawyer.events.OnRegistrationCompleteEvent;
 import com.leandro.lawyer.model.User;
-import com.leandro.lawyer.repository.UserRepo;
 import com.leandro.lawyer.security.Authority;
 import com.leandro.lawyer.security.AuthorityName;
+import com.leandro.lawyer.service.IUserService;
 
 /**
  * @author Leandro Souza
@@ -33,10 +29,11 @@ import com.leandro.lawyer.security.AuthorityName;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/user/")
+@PreAuthorize("hasRole('ADMIN')")
 public class UserController {
 
 	@Autowired
-	private UserRepo userRepo;
+	private IUserService userService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -44,63 +41,42 @@ public class UserController {
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
 
-	@PostMapping("/fetchAll")
-	@PreAuthorize("hasRole('ADMIN')")
-	public @ResponseBody List<User> fetchAll() {
-		return userRepo.findAll();
+	@PostMapping("fetchAll")
+	public @ResponseBody ResponseEntity<List> fetchAll() {
+		return new ResponseEntity<List>(userService.findAll(), HttpStatus.OK);
 	}
 
-	@PostMapping("/fetchById")
-	@PreAuthorize("hasRole('ADMIN')")
-	public @ResponseBody User fetchById(@RequestBody String username) {
-		return userRepo.findByUsername(username);
+	@PostMapping("fetchByUser")
+	public @ResponseBody ResponseEntity<Object> fetchById(@RequestBody String username) {
+		return new ResponseEntity<Object>(userService.findOne(username), HttpStatus.OK);
 	}
 
-	@PostMapping("/insert")
-	//@PreAuthorize("hasRole('ADMIN')")
-	public @ResponseBody HttpStatus insert(@RequestBody User user, WebRequest request) {
+	@PostMapping("insert")
+	public @ResponseBody ResponseEntity<Object> insert(@RequestBody User user, WebRequest request) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		List<Authority> auth = new ArrayList<>();
 		Authority aut = new Authority(null, AuthorityName.ROLE_USER);
 		auth.add(aut);
-		user.setAuthorities(auth);
+		user.setPermissions(auth);
 		user.setLastPasswordResetDate(new Date());
-		user = userRepo.save(user);
-		try {
-	        eventPublisher.publishEvent(new OnRegistrationCompleteEvent
-	          (user, request.getLocale(), request.getContextPath()));
-	    } catch (Exception me) {
-	        return HttpStatus.INTERNAL_SERVER_ERROR;
-	    }
-		
-		return HttpStatus.OK;
+		return new ResponseEntity<Object>(userService.createUser(user), HttpStatus.OK);
+//		try {
+//	        eventPublisher.publishEvent(new OnRegistrationCompleteEvent
+//	          (user, request.getLocale(), request.getContextPath()));
+//	    } catch (Exception me) {
+//	        return HttpStatus.INTERNAL_SERVER_ERROR;
+//	    }
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/update")
-	public ResponseEntity<?> update(@RequestBody User updates) {
-		User user = userRepo.findByUsername(updates.getUsername());
-		if (user != null) {
-			updates.setPassword(passwordEncoder.encode(updates.getPassword()));
-			updates.setId(user.getId());
-			return ResponseEntity.ok().build();
-		}
-		return ResponseEntity.notFound().build();
+	@PostMapping("update")
+	public ResponseEntity<Object> update(@RequestBody User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		return new ResponseEntity<Object>(userService.updateUser(user), HttpStatus.OK);
 	}
 
-	@PostMapping("/owner/delete")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> delete(@RequestBody Long id) {
-		userRepo.delete(id);
-		return ResponseEntity.ok().build();
+	@PostMapping("delete")
+	public ResponseEntity<Object> delete(@RequestBody String username) {
+		return new ResponseEntity<Object>(userService.deleteUser(username), HttpStatus.OK);
 	}
 	
-//	@PostMapping("findOne")
-//	public @ResponseBody HttpStatus findOneWithCriteria() {
-//		Query query = Query.query(Criteria.where("name").is("Jack")), User.class);
-//		User user = userRepo.findOne(query);
-//		
-//		return HttpStatus.OK;
-//		
-//	}
 }
